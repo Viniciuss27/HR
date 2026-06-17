@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: hr-config-server
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/viniciuss27/MS_Config
+          default-label: main
+          username: ${GIT_USERNAME}   # variável da .env
+          password: ${GIT_PASSWORD}   # token do GitHub na .env
+
+server:
+  port: 8888
+
