@@ -44,15 +44,13 @@ public class WorkerService {
 	}
 	
 	public Worker update(Long id, Worker obj) {
-		try {
-		Worker entity = repository.getReferenceById(id);// monitora objeto do banco de dados
-		updateData(entity, obj);
-		return repository.save(entity);
-		}catch(EntityNotFoundException e) {
-			throw new DatabaseException(e.getMessage());
-
-		}
-
+	    try {
+	        Worker entity = repository.getReferenceById(id);
+	        updateData(entity, obj);
+	        return repository.save(entity);
+	    } catch (EntityNotFoundException e) {
+	        throw new ResourceNotFoundException(id);
+	    }
 	}
 
 	private void updateData(Worker entity, Worker obj) {
