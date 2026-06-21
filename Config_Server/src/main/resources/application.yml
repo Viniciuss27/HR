@@ -1,6 +1,10 @@
 spring:
   application:
     name: hr-config-server
+
+  config:
+    import: optional:file:.env[.properties]  # para buscar na .env
+
   cloud:
     config:
       server:
@@ -12,4 +16,3 @@ spring:
 
 server:
   port: 8888
-
