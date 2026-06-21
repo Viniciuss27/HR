@@ -1,3 +1,37 @@
 spring:
   application:
-    name: User
+    name: hr-user
+
+  profiles:
+    active: prod
+
+  # Config Server 
+  config:
+    import: optional:configserver:http://hr-config-server:8888
+
+server:
+  port: ${port:0}
+
+eureka:
+  instance:
+    instance-id: ${spring.application.name}:${random.value}
+    prefer-ip-address: true
+
+  client:
+    service-url:
+      defaultZone: http://hr-eureka-server:8761/eureka
+    register-with-eureka: true
+    fetch-registry: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+  endpoint:
+    health:
+      show-details: always
+
+test:
+  config: "teste local"
