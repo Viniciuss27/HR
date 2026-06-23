@@ -1,29 +1,33 @@
 spring:
   application:
     name: hr-payroll
+  config:
+    import: optional:configserver:http://localhost:8888  #configs do Config Server
+
   cloud:
     openfeign:
       circuitbreaker:
         enabled: true
 
 server:
-  port: ${PORT:0}
+  port: ${port:0}  
 
 eureka:
+  instance:
+    instance-id: ${spring.application.name}:${random.value}
+    prefer-ip-address: true
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka
-  instance:
-    prefer-ip-address: true
 
 resilience4j:
   circuitbreaker:
     instances:
-      workerService:
-        slidingWindowSize: 10
-        minimumNumberOfCalls: 2
-        failureRateThreshold: 50
-        waitDurationInOpenState: 5s
+      hr-worker:
+        sliding-window-size: 10
+        minimum-number-of-calls: 2
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 5s
 
 feign:
   client:
