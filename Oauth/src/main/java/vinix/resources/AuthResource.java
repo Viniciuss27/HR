@@ -40,7 +40,7 @@ public class AuthResource {
     public ResponseEntity<UserDTO> getUser(@RequestParam String email) {
 
         //service faz a busca e tratamento de erro (404 se não encontrar)
-        UserDTO user = authService.findUser(email);
+        UserDTO user = authService.findEmail(email);
 
         return ResponseEntity.ok(user);
     }

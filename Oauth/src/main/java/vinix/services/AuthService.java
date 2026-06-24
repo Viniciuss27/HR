@@ -78,7 +78,7 @@ public class AuthService implements UserDetailsService {
                 .build();
     }
 
-    public UserDTO findUser(String email) {
+    public UserDTO findEmail(String email) {
         UserDTO user = userFeignClient.findByEmail(email).getBody();
 
         if (user == null) {
