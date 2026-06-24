@@ -1,8 +1,9 @@
 package vinix.config;
 
 import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -20,22 +21,28 @@ import reactor.core.publisher.Flux;
 @EnableWebFluxSecurity 
 public class ResourceServerConfig {
 
-	@Autowired
-	private SecretKey jwtSecretKey;
-
 	// rota publica, todos acessam
-	private static final String[] PUBLIC = { "/hr-oauth/oauth/token" };
+	private static final String[] PUBLIC = { "/oauth/token" };
 
 	// rotas privada para trabaladores
-	private static final String[] OPERATOR = { "/hr-worker/**" };
+	private static final String[] OPERATOR = { "/workers/**" };
 
 	// rota privada para ADM e Usuarios
-	private static final String[] ADMIN = { "/hr-payroll/**", "/hr-user/**" };
+	private static final String[] ADMIN = { "/payrolls/**", "/users/**" };
 
-	@Bean
-	ReactiveJwtDecoder jwtDecoder() {
-		return NimbusReactiveJwtDecoder.withSecretKey(jwtSecretKey).build();
-	}
+
+    @Value("${security.jwt.secret}")
+    private String secret;
+
+    @Bean
+    ReactiveJwtDecoder jwtDecoder() {
+
+        // cria chave HMAC SHA256 a partir da secret
+        SecretKey key = new SecretKeySpec(secret.getBytes(), "HmacSHA256");
+
+        // decoder padrão do Spring Security
+        return NimbusReactiveJwtDecoder.withSecretKey(key).build();
+    }
 
 	@Bean
 	SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
@@ -43,6 +50,7 @@ public class ResourceServerConfig {
 	        .csrf(csrf -> csrf.disable())
 	        .authorizeExchange(auth -> auth
 	            .pathMatchers(PUBLIC).permitAll()//público
+	            .pathMatchers(HttpMethod.POST, "/oauth/token").permitAll()
 	            .pathMatchers(HttpMethod.GET, OPERATOR).hasAnyRole("OPERATOR", "ADMIN") //operator e adm so get
 	            .pathMatchers(ADMIN).hasRole("ADMIN")//admin
 	            .anyExchange().authenticated()//qualquer outro exige autorização

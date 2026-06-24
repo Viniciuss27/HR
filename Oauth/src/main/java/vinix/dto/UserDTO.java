@@ -10,7 +10,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,7 +31,8 @@ public class UserDTO implements Serializable, UserDetails{
 	private String email;
 	
 	@Setter
-	@JsonIgnore // para evitar vazamento na requisição
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+	//recebe do JSON e não aparece na resposta
 	private String password;
 	
 	// sem @Setter, só quero com Getter

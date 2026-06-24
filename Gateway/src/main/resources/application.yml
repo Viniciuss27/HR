@@ -15,7 +15,7 @@ spring:
           predicates:
             - Path=/workers/**   
           filters:
-            - StripPrefix=1
+            - StripPrefix=0
 
         # Payroll Service
         - id: hr-payroll
@@ -23,7 +23,7 @@ spring:
           predicates:
             - Path=/payments/**  
           filters:
-            - StripPrefix=1
+            - StripPrefix=0
 
         # User Service
         - id: hr-user
@@ -31,7 +31,7 @@ spring:
           predicates:
             - Path=/users/** 
           filters:
-            - StripPrefix=1
+            - StripPrefix=0
 
         # OAuth Service
         - id: hr-oauth
@@ -39,7 +39,7 @@ spring:
           predicates:
             - Path=/oauth/** 
           filters:
-            - StripPrefix=1
+            - StripPrefix=0
             - RemoveRequestHeader=Cookie
 
 eureka:
